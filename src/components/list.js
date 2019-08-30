@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 const API_ROOT = "http://192.168.99.100:8080";
 const URL = "/api/collections/get/articles";
@@ -30,32 +32,34 @@ const List = (props) => {
 
 
       const renderBloggList = (data) => {
-          const test = (data, index) => {
+          const renderAuthors = (data, index) => {
 
             return(
                 <div key={index}><Link to={"/author/" + data._id}>{data.display}</Link></div>
             );
           }
     
-        let author = data.author.map(test)
-    
+        let author = data.author.map(renderAuthors)
+        const input = data.body.substring(0,100).concat(' ', ". . . .");
+        
         return(
           <div key={data._id}>
           <table className="dataTable">
             <thead>
               <tr className="dataTr">
-                <th className="dataTh" colSpan="2"><Link to={"/read/" + data._id }>{data.title}</Link></th>
+                <th className="dataTh" colSpan="3"><Link to={"/read/" + data._id }>{data.title}</Link></th>
               </tr>
             </thead>
             <tbody>
               <tr className="dataTr">
-                <td className="dataTd"><b>Author/s:</b>{author}</td>
+                <td className="dataTd"><ReactMarkdown source={input} /></td>
+                <td className="dataTd" width="150px"><b>Author:</b>{author}</td>
                 <td className="dataTd dataTime"><b>Published:</b><br/>{data.published_on}</td>
               </tr>
             </tbody>
           </table>
           <br/>
-          <br/>
+          
           </div>
         )
       }
@@ -67,7 +71,7 @@ const List = (props) => {
           }
           
       }
-      const back = () => {
+      const prev = () => {
           if (skip > 0){
               updatSkip(skip - 5);
           }
@@ -77,13 +81,16 @@ const List = (props) => {
       let data = bloggList.map(renderBloggList);
 
     return(
-        <>
-        <h2>Lab CMS Blogg</h2>
-        {data}
-        <Link to={"/authors"}><button>Authors List</button></Link>
-        <Link to="/" onClick={back}><button ref={prevList}>Prev Page</button></Link>
-        <Link to={"/"} onClick={next}><button ref={nextList}>Next Page</button></Link>
-        </>
+        <HelmetProvider>
+            <Helmet>
+                <title>Blogg CMS</title>
+            </Helmet>
+            <h2>Lab CMS Blogg</h2>
+            <div className="test">{data}</div>
+            <Link to={"/authors"}><button>Authors List</button></Link>
+            <Link to="/" onClick={prev}><button ref={prevList}>Prev Page</button></Link>
+            <Link to={"/"} onClick={next}><button ref={nextList}>Next Page</button></Link>
+        </HelmetProvider>
     );
 }
 

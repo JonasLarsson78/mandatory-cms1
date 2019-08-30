@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
 
 const API_ROOT = "http://192.168.99.100:8080";
 const URL = "/api/collections/get/authors";
@@ -45,7 +47,7 @@ const AuthorList = () => {
 
       return(
           <>
-          <div>AList</div>
+          <h2>Author List</h2>
           {data}
           <button onClick={goBack}>Back</button>
           </>
