@@ -9,26 +9,50 @@ const URL = "/api/collections/get/articles";
 const TOKEN = "?token=8b36c2e14defaa4945a51694b61b3e";
 
 
-const List = (props) => {
-    const [bloggList, updateBloggList] = useState([]);
-    const [skip, updatSkip] = useState(0);
+const Page = (props) => {
     
+    const page =  props.match.params.page * 5;
+    
+    const [bloggList, updateBloggList] = useState([]);
+    const [max, updateMax] = useState(null);
     const nextList = useRef(null);
     const prevList = useRef(null);
 
-    let max = null;
+    useEffect(() => {
+        
+        axios.get(API_ROOT + URL + TOKEN )
+        .then(response => {
+           updateMax(response.data.entries.length);
+       })
+      }, [max]);
+
 
     
 
     useEffect(() => {
-        if(skip === 0){
+        
+        if(page === 0){
             prevList.current.disabled = "disabled";
         }
-        axios.get(API_ROOT + URL + TOKEN + "&limit=5&skip=" + skip + "&sort[published_on]=-1")
+        else{
+            prevList.current.disabled = "";
+        }
+       
+        axios.get(API_ROOT + URL + TOKEN + "&limit=5&skip=" + page + "&sort[published_on]=-1")
         .then(response => {
            updateBloggList(response.data.entries);
+           const length = response.data.entries.length;
+
+           if (max === page + length){
+            nextList.current.disabled = "disabled";
+            nextList.current.innerHTML = "End";
+           }
+           else{
+            nextList.current.disabled = "";
+            nextList.current.innerHTML = "Next Page";
+           }
        })
-      }, [skip]);
+      }, [page, max]);
 
 
       const renderBloggList = (data) => {
@@ -63,35 +87,29 @@ const List = (props) => {
           </div>
         )
       }
-      const next = () => {
-        updatSkip(skip + 5);
-        prevList.current.disabled = "";
-          if (skip > max){
-            nextList.current.disabled = "disabled";
-          }
-          
-      }
-      const prev = () => {
-          if (skip > 0){
-              updatSkip(skip - 5);
-          }
-          nextList.current.disabled = "";
-    }
+     
 
       let data = bloggList.map(renderBloggList);
+      let next = Number(props.match.params.page) + 1;
+      let prev = Number(props.match.params.page) - 1;
 
     return(
         <HelmetProvider>
             <Helmet>
                 <title>Blogg CMS</title>
             </Helmet>
-            <h2>Lab CMS Blogg</h2>
-            <div className="test">{data}</div>
+            <div className="main">
+            <h2>Blog</h2>
+            
             <Link to={"/authors"}><button>Authors List</button></Link>
-            <Link to="/" onClick={prev}><button ref={prevList}>Prev Page</button></Link>
-            <Link to={"/"} onClick={next}><button ref={nextList}>Next Page</button></Link>
+            <Link to={"/"} ><button>Home</button></Link>
+            <Link to={"/page/" + prev} ><button ref={prevList}>Prev Page</button></Link>
+            <Link to={"/page/" + next} ><button ref={nextList}>Next Page</button></Link>
+            <br/><br/>
+            <div className="test">{data}</div>
+            </div>
         </HelmetProvider>
     );
 }
 
-export default List;
+export default Page;

@@ -28,6 +28,7 @@ const Read = (props) => {
               <div key={index}><Link to={"/author/" + data._id}>{data.display}</Link></div>
           );
         }
+        
   
       let author = data.author.map(test)
       const input = data.body;  
@@ -56,14 +57,16 @@ const Read = (props) => {
     }
 
     let data = bloggSpot.map(renderBloggSpot);
-
+    const goBack = () => {
+        window.history.back();
+      }
 
     return(
-        <>
+        <div className="main">
         <h2>Read Blogg</h2>
         {data}
-        <Link to={"/"}><button >Back to List</button></Link>
-        </>
+        <button onClick={goBack}>Back to List</button>
+        </div>
     );
 }
 

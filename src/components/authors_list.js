@@ -32,7 +32,8 @@ const AuthorList = () => {
           <table className="dataTable">
             <thead>
               <tr className="dataTr">
-                  <th className="dataTh"><img alt="author" style={{borderRadius:"40px"}} width="40px" src={API_ROOT + "/" + data.avatar.path}/><Link to={"/author/" + data._id}>{data.name}</Link></th>
+                  <th className="dataTh"><img alt="author" style={{borderRadius:"40px"}} width="40px" src={API_ROOT + "/" + data.avatar.path}/></th>
+                  <th style={{textAlign:"left", width:"95%"}}><Link to={"/author/" + data._id}>{data.name}</Link></th>
               </tr>
             </thead>
             
@@ -46,11 +47,14 @@ const AuthorList = () => {
       let data = authors.map(renderAuthors);
 
       return(
-          <>
+          <div className="main">
           <h2>Author List</h2>
-          {data}
+          
           <button onClick={goBack}>Back</button>
-          </>
+          <br/><br/>
+          {data}
+          
+          </div>
       );
 
     }

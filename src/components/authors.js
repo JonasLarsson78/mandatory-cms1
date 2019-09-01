@@ -53,11 +53,13 @@ const Authors = (props) => {
 
 
     return(
-        <>
+        <div className="main">
         <h2>Author</h2>
-        {data}
+        
         <button onClick={goBack}>Back</button>
-        </>
+        <br/><br/>
+        {data}
+        </div>
     );
 }
 
