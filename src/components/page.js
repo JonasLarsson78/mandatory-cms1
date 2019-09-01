@@ -2,7 +2,6 @@ import React, {useState, useEffect, useRef} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 const API_ROOT = "http://192.168.99.100:8080";
 const URL = "/api/collections/get/articles";
@@ -15,8 +14,11 @@ const Page = (props) => {
     
     const [bloggList, updateBloggList] = useState([]);
     const [max, updateMax] = useState(null);
+    const [sortPublished_on, updateSortPublished_on] = useState("-1");
+    const [sortTxt,] = useState("Date ↓");
     const nextList = useRef(null);
     const prevList = useRef(null);
+    
 
     useEffect(() => {
         
@@ -38,10 +40,12 @@ const Page = (props) => {
             prevList.current.disabled = "";
         }
        
-        axios.get(API_ROOT + URL + TOKEN + "&limit=5&skip=" + page + "&sort[published_on]=-1")
+        axios.get(API_ROOT + URL + TOKEN + "&limit=5&skip=" + page + "&sort[published_on]=" + sortPublished_on)
         .then(response => {
+            const length = response.data.entries.length;
+           
            updateBloggList(response.data.entries);
-           const length = response.data.entries.length;
+           
 
            if (max === page + length){
             nextList.current.disabled = "disabled";
@@ -51,8 +55,9 @@ const Page = (props) => {
             nextList.current.disabled = "";
             nextList.current.innerHTML = "Next Page";
            }
+           
        })
-      }, [page, max]);
+      }, [page, max, sortPublished_on]);
 
 
       const renderBloggList = (data) => {
@@ -66,6 +71,8 @@ const Page = (props) => {
         let author = data.author.map(renderAuthors)
         const input = data.body.substring(0,100).concat(' ', ". . . .");
         
+         
+
         return(
           <div key={data._id}>
           <table className="dataTable">
@@ -87,17 +94,36 @@ const Page = (props) => {
           </div>
         )
       }
-     
-
+      
       let data = bloggList.map(renderBloggList);
       let next = Number(props.match.params.page) + 1;
       let prev = Number(props.match.params.page) - 1;
+      
+      const sortDate = (e) =>{
+        if (sortPublished_on === "-1"){
+           e.target.innerHTML = "Date ↑";
+           updateSortPublished_on("1");
+           
+        }
+        else if(sortPublished_on === "1"){
+           e.target.innerHTML = "Date ↓";
+           updateSortPublished_on("-1");
+           
+        }
+       }
+       const search = (e) =>{
+        let input = e.target.value;
+
+        axios.get(API_ROOT + URL + TOKEN + "&filter[title][$regex]=" + input)
+        .then(response => {
+            
+           updateBloggList(response.data.entries);
+       })
+       }
+       
 
     return(
-        <HelmetProvider>
-            <Helmet>
-                <title>Blogg CMS</title>
-            </Helmet>
+        
             <div className="main">
             <h2>Blog</h2>
             
@@ -106,9 +132,18 @@ const Page = (props) => {
             <Link to={"/page/" + prev} ><button ref={prevList}>Prev Page</button></Link>
             <Link to={"/page/" + next} ><button ref={nextList}>Next Page</button></Link>
             <br/><br/>
+            <table style={{width: "80.5%"}}>
+                <tbody>
+                    <tr>
+                        <td><input placeholder="Search blog title..." style={{outline: "none",fontSize: "18px",height: "25px",borderRadius: "5px",padding: "5px",marginLeft: "10px", border: "none", marginBottom: "5px"}} onChange={search} type="text"/></td>
+                        <td style={{width: "120px"}}><button style={{background:"white"}}  onClick={sortDate}>{sortTxt}</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            
             <div className="test">{data}</div>
             </div>
-        </HelmetProvider>
+        
     );
 }
 

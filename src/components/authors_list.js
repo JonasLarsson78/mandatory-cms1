@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 
 const API_ROOT = "http://192.168.99.100:8080";

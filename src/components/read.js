@@ -45,8 +45,8 @@ const Read = (props) => {
               <td className="dataTd" colSpan="2"><ReactMarkdown source={input} /></td>
             </tr>
             <tr className="dataTr">
-              <td className="dataTd">{author}</td>
-              <td className="dataTd dataTime">{data.published_on}</td>
+              <td className="dataTd"><b>Author:</b>{author}</td>
+              <td className="dataTd dataTime"><b>Published:</b><br/>{data.published_on}</td>
             </tr>
           </tbody>
         </table>
@@ -63,9 +63,12 @@ const Read = (props) => {
 
     return(
         <div className="main">
+
         <h2>Read Blogg</h2>
-        {data}
         <button onClick={goBack}>Back to List</button>
+        <br/><br/>
+        {data}
+        
         </div>
     );
 }

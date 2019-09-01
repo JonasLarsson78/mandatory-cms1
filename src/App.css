@@ -2,7 +2,7 @@
 body{
   font-family: 'Lexend Deca', sans-serif;
   background: url(./img/random_grey_variations.png);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 h2{
   margin-left: 10px;
