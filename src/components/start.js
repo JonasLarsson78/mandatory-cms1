@@ -21,9 +21,9 @@ const Start = (props) => {
                 <td style={{textAlign: "center", border: "none"}} className="dataTd"><Link to="/page/0"><img alt="loggo" style={{width: "250px"}} src={require('../img/blog.png')}/></Link></td>
               </tr>
               <tr className="dataTr">
-                <td style={{textAlign: "center", border: "none", fontSize: "30px"}} className="dataTd"><Link to="/page/0">Enter Blog</Link></td>
+                <td style={{textAlign: "center", border: "none", fontSize: "30px"}} className="dataTd"><Link to="/page/0"> Enter Blog  </Link></td>
               </tr>
-              <tr className="dataTr">
+              <tr className="dataTr" >
                 <td style={{textAlign: "center", border: "none", fontSize: "25px"}} className="dataTd"><br/><br/>- Jonas Larsson- CMS Cockpit - EC Utbilding - 2019 -</td>
               </tr>
               </tbody>

@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 
-const API_ROOT = "http://192.168.99.100:8080";
+const API_ROOT = "https://blogcockpit.devspace.host";
 const URL = "/api/collections/get/authors";
-const TOKEN = "?token=8b36c2e14defaa4945a51694b61b3e";
+const TOKEN = "?token=44411d81e1195c4e76130cff19b3ea";
 
 
 const AuthorList = () => {
